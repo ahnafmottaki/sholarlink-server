@@ -4,7 +4,6 @@ import {
   ServerApiVersion,
 } from "mongodb";
 import { agentCollectionOptions } from "../db_validators/agent.validator";
-import { Agent } from "../zod/create-agent";
 const uri = process.env.MONGODB_URI!;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -16,15 +15,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-function createCollection(
-  collectionName: string,
-  options: CreateCollectionOptions = {},
-) {
-  return db.createCollection(collectionName, options);
-}
-
-const db = client.db("scholarlink");
-export const agentCollection = db.collection<Agent>("agents");
+export const db = client.db("scholarlink");
 export async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)

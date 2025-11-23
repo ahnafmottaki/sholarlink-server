@@ -1,10 +1,12 @@
 import { StatusCodes } from "http-status-codes";
-import { agentCollection } from "../config/db.config";
 import { AppError } from "../lib/AppError";
 import { Agent, AgentSchema } from "../zod/create-agent";
 import { AgentModel } from "../models/agent.model";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
+import { db } from "../config/db.config";
+
+const agentCollection = db.collection<Agent>("agents");
 
 class AgentService {
   static async isExists(username: string, email: string) {

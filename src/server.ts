@@ -3,11 +3,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 dotenv.config();
 //routers
+import { run } from "./config/db.config";
 import agentRouter from "./router/agent.route";
 import notFound from "./middlewares/notFound";
 import errorMiddleware from "./middlewares/errorMiddleware";
-import { run } from "./config/db.config";
-
 const app = express();
 const port = process.env.PORT! || 3000;
 
@@ -36,7 +35,7 @@ app.use(notFound);
 // errorMiddleware
 app.use(errorMiddleware);
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
-  run();
+  await run();
 });
