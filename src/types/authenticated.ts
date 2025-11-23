@@ -4,8 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 type Payload = {
   _id: string;
   username: string;
-  account_type: string;
-  role: string;
+  role: "admin" | "agent";
 };
 
 type JWTPayload = Payload & JwtPayload;

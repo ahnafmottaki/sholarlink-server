@@ -1,79 +1,66 @@
 import { ObjectId } from "mongodb";
-import bcrypt from "bcryptjs";
+import z from "zod";
 import {
-  Agent,
-  AgentSchema,
-  IndividualAgent,
-  OrganizationAgent,
-} from "../zod/create-agent";
-import { Payload } from "../types/authenticated";
+  AgentRegisterType,
+  individualSchema,
+  organizationSchema,
+} from "../zod/auth.schema";
 
-class AgentModel {
-  static hashPassword(password: string) {
-    return bcrypt.hash(password, 10);
-  }
+export type ModelExtraProperties = {
+  _id: ObjectId;
+  role: "agent";
+  document_path: string;
+  created_at: Date;
+  updated_at: Date;
+  student_profiles: any[];
+  is_approved: boolean;
+};
 
-  static toResponse(agent: Agent) {
-    const { _id, ...rest } = agent;
-    return rest;
-  }
+export type IndividualAgent = z.infer<typeof individualSchema> &
+  ModelExtraProperties;
+export type OrganizationAgent = z.infer<typeof organizationSchema> &
+  ModelExtraProperties;
+export type Agent = IndividualAgent | OrganizationAgent;
 
-  static getJWTPayload(agent: Agent): Payload {
-    return {
-      _id: agent._id.toString(),
-      username: agent.username,
-      account_type: agent.account_type,
-      role: agent.role,
-    };
-  }
-
-  static async createAgent(
-    agent: AgentSchema,
-    document_path: string,
-  ): Promise<Agent> {
-    const hashedPassword = await AgentModel.hashPassword(agent.password);
-    if (agent.account_type === "individual") {
-      const individual: IndividualAgent = {
-        _id: new ObjectId(),
-        username: agent.username,
-        password: hashedPassword,
-        contact_no: agent.contact_no,
-        country: agent.country,
-        address: agent.address,
-        role: "agent",
-        account_type: agent.account_type,
-        full_name: agent.full_name,
-        email: agent.email,
-        document_type: agent.document_type,
-        document_path: document_path,
-        student_profiles: [],
-        is_approved: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-      };
-      return individual;
-    }
-    const organization: OrganizationAgent = {
+export class AgentModel {
+  public agent: Agent;
+  constructor(partial: AgentRegisterType, document_path: string) {
+    const base: ModelExtraProperties = {
       _id: new ObjectId(),
-      username: agent.username,
-      password: hashedPassword,
-      contact_no: agent.contact_no,
-      country: agent.country,
-      address: agent.address,
       role: "agent",
-      account_type: agent.account_type,
-      organization_name: agent.organization_name,
-      organization_email: agent.organization_email,
-      person_in_charge: agent.person_in_charge,
-      document_type: agent.document_type,
-      document_path: document_path,
-      student_profiles: [],
-      is_approved: false,
       created_at: new Date(),
       updated_at: new Date(),
+      document_path,
+      is_approved: false,
+      student_profiles: [],
     };
-    return organization;
+    this.agent = {
+      ...base,
+      ...partial,
+    };
+  }
+
+  async hashPassword() {
+    // lazy import to avoid bringing bcrypt into files that don't need it
+    const bcrypt = await import("bcryptjs");
+    // mutate underlying doc.password
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.agent.password = await bcrypt.hash(this.agent.password, 10);
+    return this;
+  }
+
+  getJwtPayload() {
+    return {
+      _id: this.agent._id.toString(),
+      role: this.agent.role,
+      username: this.agent.username,
+    };
+  }
+
+  toDocument() {
+    // For DB insertion/updates: keep date objects (mongodb accepts Date)
+    return {
+      ...this.agent,
+    };
   }
 }
-
-export { AgentModel };

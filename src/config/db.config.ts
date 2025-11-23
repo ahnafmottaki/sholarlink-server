@@ -1,10 +1,6 @@
-import {
-  CreateCollectionOptions,
-  MongoClient,
-  ServerApiVersion,
-} from "mongodb";
-import { agentCollectionOptions } from "../db_validators/agent.validator";
-const uri = process.env.MONGODB_URI!;
+import { Db, MongoClient, ServerApiVersion } from "mongodb";
+import { env } from "./env";
+const uri = env.MONGO_URI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -15,26 +11,17 @@ const client = new MongoClient(uri, {
   },
 });
 
-export const db = client.db("scholarlink");
-export async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
+let db: Db | null = null;
+
+export async function connectDb() {
+  if (!db) {
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!",
-    );
-    const collections = await db
-      .listCollections()
-      .map((col) => col.name)
-      .toArray();
-    if (!collections.includes("agents")) {
-      console.log(collections);
-      await db.createCollection("agents", agentCollectionOptions);
-    }
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
+    db = client.db("scholarlink");
   }
+  return db;
+}
+
+export function getDb() {
+  if (!db) throw new Error("Database not connected. Call connectDb() first.");
+  return db as Db;
 }

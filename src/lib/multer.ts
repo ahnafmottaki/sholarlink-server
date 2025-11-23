@@ -4,12 +4,12 @@ const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {
     if (
-      req.originalUrl === "api/register" ||
-      file.mimetype === "application/pdf"
+      req.originalUrl === "/api/v1/auth/register" &&
+      file.mimetype !== "application/pdf"
     ) {
-      cb(null, true);
+      cb(new Error("Invalid file type, please upload a PDF file."));
     } else {
-      cb(new Error("Invalid file type"));
+      cb(null, true);
     }
   },
   limits: {

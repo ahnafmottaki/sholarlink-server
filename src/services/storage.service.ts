@@ -1,13 +1,11 @@
 import bucket from "../config/gcs.config";
 
 class StorageService {
-  static uploadFile(
-    file: Express.Multer.File,
-    fileName: string,
-  ): Promise<string> {
+  uploadFile(file: Express.Multer.File, fileName: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const bucketFile = bucket.file(fileName);
       const bucketStream = bucketFile.createWriteStream({
+        resumable: false,
         metadata: {
           contentType: file.mimetype,
         },
@@ -25,4 +23,4 @@ class StorageService {
   }
 }
 
-export default StorageService;
+export default new StorageService();

@@ -1,8 +1,7 @@
 import express from "express";
-import upload from "../lib/multer";
+import { signup } from "../controllers/auth.controller";
 import { validateRegisterInput } from "../middlewares/validationMiddleware";
-import { download, signup } from "../controllers/agent.controller";
-
+import upload from "../lib/multer";
 const router = express.Router();
 
 router.post(
@@ -11,7 +10,5 @@ router.post(
   validateRegisterInput,
   signup,
 );
-
-router.get("/download", download);
-
+//
 export default router;
