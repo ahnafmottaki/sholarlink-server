@@ -4,6 +4,7 @@ import authService from "../services/auth.service";
 import { ApiResponse } from "../lib/ApiResponse";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { AppError } from "../lib/AppError";
+import { setCookie } from "../lib/cookie";
 
 export const signup = asyncHandler(async (req, res, next) => {
   const parsed: AgentRegisterType = req.body;
@@ -21,8 +22,8 @@ export const login = asyncHandler(async (req, res, next) => {
   if (!result) {
     return next(new AppError(StatusCodes.UNAUTHORIZED, "Invalid credentials"));
   }
-  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, {
-    token: result.token,
-    user: result.agent,
-  }).sendResponse(res);
+  setCookie(res, result.token);
+  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, result.agent).sendResponse(
+    res,
+  );
 });

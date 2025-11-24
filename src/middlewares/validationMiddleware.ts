@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { agentRegisterSchema } from "../zod/auth.schema";
+import { agentRegisterSchema, loginSchema } from "../zod/auth.schema";
 import { _ZodType } from "zod";
 import { asyncHandler } from "../lib/asyncHandler";
 import { AppError } from "../lib/AppError";
@@ -17,5 +17,6 @@ const getValidated = (schema: _ZodType): RequestHandler => {
 };
 
 const validateRegisterInput = getValidated(agentRegisterSchema);
+const validateLoginInput = getValidated(loginSchema);
 
-export { validateRegisterInput };
+export { validateRegisterInput, validateLoginInput };

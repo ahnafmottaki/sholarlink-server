@@ -13,4 +13,4 @@ type AuthenticatedRequest = Request & {
   user: JWTPayload;
 };
 
-export { Payload, JWTPayload, AuthenticatedRequest };
+export { JWTPayload, AuthenticatedRequest };

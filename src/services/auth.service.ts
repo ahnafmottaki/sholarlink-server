@@ -38,6 +38,13 @@ class authService {
     const isValid = await bcrypt.compare(password, (agent as any).password);
     if (!isValid) return null;
 
+    if (!agent.is_approved) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Verification pending, please check your email for confirmation",
+      );
+    }
+
     const token = this.signPayload({
       _id: agent._id.toString(),
       role: agent.role,
@@ -47,9 +54,11 @@ class authService {
     return { agent, token };
   }
 
+  async adminLogin(username: string, password: string) {}
+
   signPayload(payload: Record<string, unknown>) {
     return jwt.sign(payload, env.JWT_SECRET, {
-      expiresIn: Number(env.JWT_EXPIRES_IN),
+      expiresIn: env.JWT_EXPIRES_IN as unknown as number,
     });
   }
 }
