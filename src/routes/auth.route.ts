@@ -1,5 +1,5 @@
 import express from "express";
-import { login, signup } from "../controllers/auth.controller";
+import { adminLogin, login, signup } from "../controllers/auth.controller";
 import {
   validateLoginInput,
   validateRegisterInput,
@@ -15,4 +15,7 @@ router.post(
 );
 
 router.post("/login", validateLoginInput, login);
+
+router.post("/adminLogin", validateLoginInput, adminLogin);
+
 export default router;

@@ -2,7 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { env } from "../config/env";
 import { AgentModel } from "../models/agent.model";
-import * as agentRepo from "../db/agent.repo";
+import * as agentRepo from "../db";
+import * as adminRepo from "../db";
 import { AgentRegisterType } from "../zod/auth.schema";
 import { AppError } from "../lib/AppError";
 import { StatusCodes } from "http-status-codes";
@@ -35,7 +36,7 @@ class authService {
     const agent = await agentRepo.findAgentByUsername(username);
     if (!agent) return null;
 
-    const isValid = await bcrypt.compare(password, (agent as any).password);
+    const isValid = await bcrypt.compare(password, agent.password);
     if (!isValid) return null;
 
     if (!agent.is_approved) {
@@ -54,7 +55,23 @@ class authService {
     return { agent, token };
   }
 
-  async adminLogin(username: string, password: string) {}
+  async adminLogin(username: string, password: string) {
+    const admin = await adminRepo.findByUsername(username);
+    if (!admin) {
+      throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid Credentials");
+    }
+    const isValid = await bcrypt.compare(password, admin.password);
+    if (!isValid) {
+      throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid Credentials");
+    }
+    const token = this.signPayload({
+      _id: admin._id.toString(),
+      role: admin.role,
+      username: admin.username,
+    });
+    return { admin, token };
+    return { admin, token };
+  }
 
   signPayload(payload: Record<string, unknown>) {
     return jwt.sign(payload, env.JWT_SECRET, {
