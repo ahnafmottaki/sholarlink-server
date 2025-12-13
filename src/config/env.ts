@@ -12,12 +12,19 @@ const envSchema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
   GCS_BUCKET_NAME: z.string().min(1, "GCS_BUCKET is required"),
-  GOOGLE_APPLICATION_CREDENTIALS: z
-    .string()
-    .min(1, "GOOGLE_APPLICATION_CREDENTIALS is required"),
   MONGO_URI: z.string().min(1, "MONGO_URI is required"),
   JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
   JWT_EXPIRES_IN: z.string().default("1d"),
+  GOOGLE_SERVICE_KEY: z.string().min(1, "service key file path required"),
+  GOOGLE_PROJECT_ID: z.string().min(1, "GOOGLE_PROJECT_ID required"),
+  GOOGLE_CLIENT_EMAIL: z.string().min(1, "GOOGLE_CLIENT_EMAIL required"),
+  GOOGLE_PRIVATE_KEY: z.string().min(1, "GOOGLE_PRIVATE_KEY required"),
+  GOOGLE_CLIENT_ID: z.string().min(1, "GOOGLE_CLIENT_ID required"),
+  GOOGLE_PRIVATE_KEY_ID: z.string().min(1, "GOOGLE_PRIVATE_KEY_ID required"),
+  AUTH_URL: z.string().min(1, "AUTH_URL required"),
+  TOKEN_URL: z.string().min(1, "TOKEN_URL required"),
+  AUTH_PROVIDER_CERT_URL: z.string().min(1, "AUTH_PROVIDER_CENT_URL required"),
+  CLIENT_CERT_URL: z.string().min(1, "CLIENT_CERT_URL required"),
 });
 
 const parsed = envSchema.safeParse(process.env);

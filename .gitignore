@@ -1,4 +1,4 @@
 node_modules
 dist
 .env
-sholarlink-service-account.json
+gcs-service-key.json

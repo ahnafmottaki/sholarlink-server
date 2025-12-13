@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { env } from "./config/env";
-
 import { authRouter } from "./routes";
 import notFound from "./middlewares/notFound";
 import errorMiddleware from "./middlewares/errorMiddleware";

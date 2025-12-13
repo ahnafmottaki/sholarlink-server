@@ -11,7 +11,7 @@ class StorageService {
         },
       });
       bucketStream.on("error", (error) => {
-        reject(new Error("Server error, please try again later."));
+        reject(error);
       });
 
       bucketStream.on("finish", () => {

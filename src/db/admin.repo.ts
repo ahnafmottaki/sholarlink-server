@@ -5,7 +5,7 @@ import { Admin } from "../models/admin.model";
 const COLLECTION = "admins";
 
 function collection() {
-  return getDb().collection("admins") as Collection<Admin>;
+  return getDb().collection(COLLECTION) as Collection<Admin>;
 }
 
 export const findByUsername = async (username: string) => {
