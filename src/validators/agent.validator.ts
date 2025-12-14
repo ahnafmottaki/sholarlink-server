@@ -13,6 +13,7 @@ const agentCollectionOptions: CreateCollectionOptions = {
         "country",
         "contact_no",
         "address",
+        "status",
       ],
       additionalProperties: true,
       properties: {
@@ -41,6 +42,10 @@ const agentCollectionOptions: CreateCollectionOptions = {
           bsonType: "string",
           minLength: 5,
           maxLength: 200,
+        },
+        status: {
+          bsonType: "string",
+          enum: ["pending", "approved", "rejected"],
         },
         account_type: {
           bsonType: "string",

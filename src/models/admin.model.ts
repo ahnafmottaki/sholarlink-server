@@ -11,7 +11,7 @@ interface Admin {
 }
 
 class AdminModel {
-  public admin: Admin;
+  private admin: Admin;
   constructor(admin: Admin) {
     this.admin = admin;
   }

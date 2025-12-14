@@ -13,7 +13,7 @@ export type ModelExtraProperties = {
   created_at: Date;
   updated_at: Date;
   student_profiles: any[];
-  is_approved: boolean;
+  status: "pending" | "approved" | "rejected";
 };
 
 export type IndividualAgent = z.infer<typeof individualSchema> &
@@ -31,7 +31,7 @@ export class AgentModel {
       created_at: new Date(),
       updated_at: new Date(),
       document_path,
-      is_approved: false,
+      status: "pending",
       student_profiles: [],
     };
     this.agent = {

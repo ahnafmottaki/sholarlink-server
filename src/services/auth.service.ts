@@ -10,8 +10,6 @@ import { StatusCodes } from "http-status-codes";
 import storageService from "./storage.service";
 
 class authService {
-  constructor() {}
-
   async registerAgent(payload: AgentRegisterType, file: Express.Multer.File) {
     const email =
       payload.account_type === "individual"
@@ -28,6 +26,7 @@ class authService {
     await storageService.uploadFile(file, filepath);
     const agent = new AgentModel(payload, filepath);
     await agent.hashPassword();
+    console.log(agent.toDocument());
     await agentRepo.createAgent(agent.toDocument());
     return agent;
   }
@@ -39,10 +38,16 @@ class authService {
     const isValid = await bcrypt.compare(password, agent.password);
     if (!isValid) return null;
 
-    if (!agent.is_approved) {
+    if (agent.status === "pending") {
       throw new AppError(
         StatusCodes.BAD_REQUEST,
         "Verification pending, please check your email for confirmation",
+      );
+    }
+    if (agent.status === "rejected") {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Rejected application, please check your email for more information",
       );
     }
 

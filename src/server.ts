@@ -6,6 +6,7 @@ import notFound from "./middlewares/notFound";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import { connectDb } from "./config/db.config";
 import { createAdmin } from "./db";
+import morgan from "morgan";
 (async () => {
   await connectDb();
   const app = express();
@@ -16,6 +17,7 @@ import { createAdmin } from "./db";
       credentials: true,
     }),
   );
+  app.use(morgan("dev"));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api/v1/auth", authRouter);
