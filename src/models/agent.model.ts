@@ -41,10 +41,7 @@ export class AgentModel {
   }
 
   async hashPassword() {
-    // lazy import to avoid bringing bcrypt into files that don't need it
     const bcrypt = await import("bcryptjs");
-    // mutate underlying doc.password
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.agent.password = await bcrypt.hash(this.agent.password, 10);
     return this;
   }
@@ -58,7 +55,6 @@ export class AgentModel {
   }
 
   toDocument() {
-    // For DB insertion/updates: keep date objects (mongodb accepts Date)
     return {
       ...this.agent,
     };

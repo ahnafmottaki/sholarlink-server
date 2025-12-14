@@ -5,6 +5,7 @@ import { authRouter } from "./routes";
 import notFound from "./middlewares/notFound";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import { connectDb } from "./config/db.config";
+import { createAdmin } from "./db";
 (async () => {
   await connectDb();
   const app = express();

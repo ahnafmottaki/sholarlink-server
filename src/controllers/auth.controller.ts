@@ -13,7 +13,9 @@ export const signup = asyncHandler(async (req, res, next) => {
     throw new AppError(StatusCodes.BAD_REQUEST, "file is required");
   }
   await authService.registerAgent(parsed, file);
-  new ApiResponse(StatusCodes.CREATED, ReasonPhrases.CREATED).sendResponse(res);
+  new ApiResponse(StatusCodes.CREATED, "Registration Successful").sendResponse(
+    res,
+  );
 });
 
 export const login = asyncHandler(async (req, res, next) => {
@@ -23,9 +25,11 @@ export const login = asyncHandler(async (req, res, next) => {
     return next(new AppError(StatusCodes.UNAUTHORIZED, "Invalid credentials"));
   }
   setCookie(res, result.token);
-  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, result.agent).sendResponse(
-    res,
-  );
+  new ApiResponse(
+    StatusCodes.OK,
+    "Login Successful",
+    result.agent,
+  ).sendResponse(res);
 });
 
 export const adminLogin = asyncHandler(async (req, res, next) => {
@@ -34,5 +38,5 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
     req.body.password,
   );
   setCookie(res, token);
-  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK).sendResponse(res);
+  new ApiResponse(StatusCodes.OK, "Login Successful").sendResponse(res);
 });

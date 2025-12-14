@@ -70,7 +70,6 @@ class authService {
       username: admin.username,
     });
     return { admin, token };
-    return { admin, token };
   }
 
   signPayload(payload: Record<string, unknown>) {
