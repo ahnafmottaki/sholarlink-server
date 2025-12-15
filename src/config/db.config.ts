@@ -1,27 +1,13 @@
-import { Db, MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
 import { env } from "./env";
-const uri = env.MONGO_URI;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
-let db: Db | null = null;
-
-export async function connectDb() {
-  if (!db) {
-    await client.connect();
-    db = client.db("scholarlink");
+async function mongoConnect() {
+  try {
+    await mongoose.connect(env.MONGO_URI);
+    console.log("database connected");
+  } catch (error) {
+    console.error("Error connecting to database:", error);
+    process.exit(1);
   }
-  return db;
 }
-
-export function getDb() {
-  if (!db) throw new Error("Database not connected. Call connectDb() first.");
-  return db as Db;
-}
+export { mongoConnect };

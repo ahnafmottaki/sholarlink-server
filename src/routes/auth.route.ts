@@ -1,21 +1,12 @@
 import express from "express";
-import { adminLogin, login, signup } from "../controllers/auth.controller";
-import {
-  validateLoginInput,
-  validateRegisterInput,
-} from "../middlewares/validationMiddleware";
 import upload from "../lib/multer";
+import { signup } from "../controllers/auth.controller";
 const router = express.Router();
 
-router.post(
-  "/register",
-  upload.single("document"),
-  validateRegisterInput,
-  signup,
-);
+router.post("/register", upload.single("document"), signup);
 
-router.post("/login", validateLoginInput, login);
+// router.post("/login", validateLoginInput, login);
 
-router.post("/adminLogin", validateLoginInput, adminLogin);
+// router.post("/adminLogin", validateLoginInput, adminLogin);
 
 export default router;

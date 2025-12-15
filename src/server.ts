@@ -4,11 +4,10 @@ import { env } from "./config/env";
 import { authRouter } from "./routes";
 import notFound from "./middlewares/notFound";
 import errorMiddleware from "./middlewares/errorMiddleware";
-import { connectDb } from "./config/db.config";
 import morgan from "morgan";
-import adminRouter from "./routes/admin.route";
+import { mongoConnect } from "./config/db.config";
 (async () => {
-  await connectDb();
+  await mongoConnect();
   const app = express();
   app.use(
     cors({
@@ -21,7 +20,6 @@ import adminRouter from "./routes/admin.route";
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api/v1/auth", authRouter);
-  app.use("/api/v1/admin", adminRouter);
   app.get("/", (req, res, next) => {
     res.json({
       success: true,
