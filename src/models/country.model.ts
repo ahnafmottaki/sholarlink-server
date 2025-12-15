@@ -1,11 +1,23 @@
 import mongoose from "mongoose";
-import { env } from "../config/env";
-import { sv } from "zod/v4/locales";
 
-const countrySchema = new mongoose.Schema({
+interface ICountry {
   name: {
-    common: String,
-    official: String,
+    common: string;
+    official: string;
+  };
+  cca2: string; // ISO code (BD, US)
+  cca3: string;
+  callingCode: string;
+  flags: {
+    png: string;
+    svg: string;
+    alt: string;
+  };
+}
+const countrySchema = new mongoose.Schema<ICountry>({
+  name: {
+    common: { type: String, required: true },
+    official: { type: String, required: true },
   },
   cca2: String, // ISO code (BD, US)
   cca3: String,
@@ -17,32 +29,20 @@ const countrySchema = new mongoose.Schema({
   },
 });
 
-const Country = mongoose.model("Country", countrySchema);
-// const seedCountries = async () => {
-//   await mongoose.connect(env.MONGO_URI);
-//   const res = await fetch(
-//     "https://restcountries.com/v3.1/all?fields=name,cca2,idd,cioc,flags",
-//   );
-//   const data: any[] = await res.json();
-//   const countries = data.map((c) => ({
-//     name: {
-//       common: c.name.common,
-//       official: c.name.official,
-//     },
-//     cca2: c.cca2,
-//     cca3: c.cca3,
-//     callingCode: c.idd?.root ? c.idd.root + (c.idd.suffixes?.[0] || "") : "",
-//     flags: {
-//       png: c.flags.png,
-//       svg: c.flags.svg,
-//       alt: c.flags.alt,
-//     },
-//   }));
-//   await Country.deleteMany();
-//   await Country.insertMany(countries);
-//   console.log("Countries seeded successfully");
-//   process.exit();
-// };
-// seedCountries();
+countrySchema.statics.getCountries = async function () {
+  const countries = await Country.find(
+    {},
+    { name: 1, callingCode: 1, _id: 1 },
+  ).sort({ "name.common": 1 });
+  const mapped = countries.map((country) => {
+    return {
+      _id: country._id,
+      name: country.name.common,
+      callingCode: country.callingCode,
+    };
+  });
+  return mapped;
+};
 
+const Country = mongoose.model<ICountry>("Country", countrySchema);
 export default Country;
