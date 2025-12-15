@@ -1,2 +1,2 @@
-export * from "./agent.repo";
-export * from "./admin.repo";
+export * as AgentRepo from "./agent.repo";
+export * as AdminRepo from "./admin.repo";

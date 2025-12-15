@@ -27,14 +27,21 @@ export async function findAgentById(id: string | ObjectId) {
   return collection().findOne({ _id });
 }
 
-export async function findAgents() {
-  const agents = await collection().find({}).toArray();
+export async function findAgents(projection: Record<string, any> = {}) {
+  const agents = await collection()
+    .find(
+      {},
+      {
+        projection,
+      },
+    )
+    .toArray();
   return agents;
 }
 
 export async function updateAgent(
   id: string | ObjectId,
-  patch: Partial<Agent>
+  patch: Partial<Agent>,
 ) {
   const _id = typeof id === "string" ? new ObjectId(id) : id;
   await collection().updateOne({ _id }, { $set: patch });

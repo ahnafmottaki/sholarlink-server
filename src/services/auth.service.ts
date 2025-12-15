@@ -2,8 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { env } from "../config/env";
 import { AgentModel } from "../models/agent.model";
-import * as agentRepo from "../db";
-import * as adminRepo from "../db";
+import { AgentRepo, AdminRepo } from "../db";
 import { AgentRegisterType } from "../zod/auth.schema";
 import { AppError } from "../lib/AppError";
 import { StatusCodes } from "http-status-codes";
@@ -15,7 +14,7 @@ class authService {
       payload.account_type === "individual"
         ? payload.email
         : payload.organization_email;
-    const isExist = await agentRepo.isExists(payload.username, email);
+    const isExist = await AgentRepo.isExists(payload.username, email);
     if (isExist) {
       throw new AppError(
         StatusCodes.CONFLICT,
@@ -27,12 +26,12 @@ class authService {
     const agent = new AgentModel(payload, filepath);
     await agent.hashPassword();
     console.log(agent.toDocument());
-    await agentRepo.createAgent(agent.toDocument());
+    await AgentRepo.createAgent(agent.toDocument());
     return agent;
   }
 
   async loginAgent(username: string, password: string) {
-    const agent = await agentRepo.findAgentByUsername(username);
+    const agent = await AgentRepo.findAgentByUsername(username);
     if (!agent) return null;
 
     const isValid = await bcrypt.compare(password, agent.password);
@@ -61,7 +60,7 @@ class authService {
   }
 
   async adminLogin(username: string, password: string) {
-    const admin = await adminRepo.findByUsername(username);
+    const admin = await AdminRepo.findByUsername(username);
     if (!admin) {
       throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid Credentials");
     }
