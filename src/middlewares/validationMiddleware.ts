@@ -7,6 +7,7 @@ import { StatusCodes } from "http-status-codes";
 
 const getValidated = (schema: _ZodType): RequestHandler => {
   return asyncHandler((req, res, next) => {
+    console.log(req.body);
     const result = schema.safeParse(req.body);
     if (!result.success) {
       const error = result.error.issues[0].message;

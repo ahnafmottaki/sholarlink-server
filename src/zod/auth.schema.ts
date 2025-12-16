@@ -1,5 +1,5 @@
 import z from "zod";
-import DOCUMENT_TYPES from "../constants/document-types";
+import { ACCOUNT_TYPES } from "../constants/document-types";
 
 const loginSchema = z.object({
   username: z.string().min(3, "username is required"),
@@ -11,21 +11,19 @@ const baseAgentSchema = loginSchema.extend({
     .string()
     .min(10, "contact number must be at least 10 characters"),
   country: z.string().min(1, "country is required"),
+  name: z.string().min(3, "full name is required"),
+  email: z.email("invalid email address"),
   address: z.string().min(1, "address is required"),
 });
 
 const individualSchema = baseAgentSchema.extend({
   account_type: z.literal("individual"),
-  full_name: z.string().min(3, "full name is required"),
-  email: z.email("invalid email address"),
-  document_type: z.enum(DOCUMENT_TYPES.individual),
+  document_type: z.enum(Object.keys(ACCOUNT_TYPES.individual)),
 });
 const organizationSchema = baseAgentSchema.extend({
   account_type: z.literal("organization"),
-  organization_name: z.string().min(3, "organization name is required"),
-  organization_email: z.email("invalid email address"), // Fixed: use z.string().email()
-  person_in_charge: z.string().min(3, "person in charge is required"),
-  document_type: z.enum(DOCUMENT_TYPES.organization), // Fixed: use z.enum() for array of literals
+  org_name: z.string().min(3, "organization name is required"),
+  document_type: z.enum(Object.keys(ACCOUNT_TYPES.organization)),
 });
 
 const agentRegisterSchema = z.discriminatedUnion("account_type", [
