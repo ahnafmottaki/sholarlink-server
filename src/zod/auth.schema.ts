@@ -26,7 +26,7 @@ const organizationSchema = baseAgentSchema.extend({
   documentType: z.enum(Object.keys(ACCOUNT_TYPES.organization)),
 });
 
-const agentRegisterSchema = z.discriminatedUnion("account_type", [
+const agentRegisterSchema = z.discriminatedUnion("accountType", [
   individualSchema,
   organizationSchema,
 ]);

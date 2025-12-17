@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 interface ICountry {
   name: {
@@ -14,7 +14,10 @@ interface ICountry {
     alt: string;
   };
 }
-const countrySchema = new mongoose.Schema<ICountry>({
+interface CountryModel extends Model<ICountry> {
+  getCountries(): Promise<ICountry[]>;
+}
+const countrySchema = new mongoose.Schema<ICountry, CountryModel>({
   name: {
     common: { type: String, required: true },
     official: { type: String, required: true },
@@ -44,5 +47,8 @@ countrySchema.statics.getCountries = async function () {
   return mapped;
 };
 
-const Country = mongoose.model<ICountry>("Country", countrySchema);
+const Country = mongoose.model<ICountry, CountryModel>(
+  "Country",
+  countrySchema,
+);
 export default Country;

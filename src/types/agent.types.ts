@@ -1,12 +1,18 @@
 import mongoose from "mongoose";
-import { IndividualRegister, OrganizationRegister } from "./auth.types";
+import { Account, DocumentTypes } from "../constants/document-types";
 
-interface Common {
+interface IAgent {
+  username: string;
+  password: string;
   country: mongoose.Schema.Types.ObjectId;
+  contactNo: string;
+  name: string;
+  email: string;
+  address: string;
+  accountType: Account;
+  documentType: DocumentTypes;
+  orgName?: string;
   documentPath: string;
 }
-type Individual = Omit<IndividualRegister, "country"> & Common;
-type Organization = Omit<OrganizationRegister, "country"> & Common;
 
-type Agent = Individual | Organization;
-export type { Agent };
+export type { IAgent };

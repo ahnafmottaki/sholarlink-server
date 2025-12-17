@@ -1,6 +1,11 @@
 import bucket from "../config/gcs.config";
 
 class StorageService {
+  private _registryFolder: string = "user-documents";
+
+  get registryFolder() {
+    return this._registryFolder;
+  }
   uploadFile(file: Express.Multer.File, fileName: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const bucketFile = bucket.file(fileName);

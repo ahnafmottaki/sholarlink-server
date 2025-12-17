@@ -7,7 +7,7 @@ const router = express.Router();
 router.post(
   "/register",
   upload.single("document"),
-  validateRegisterInput,
+  ...validateRegisterInput,
   signup,
 );
 

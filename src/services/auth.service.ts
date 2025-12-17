@@ -1,22 +1,32 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { env } from "../config/env";
+import { AgentRegister } from "../types/auth.types";
+import { AgentModel } from "../models/agent.model";
 import { AppError } from "../lib/AppError";
 import { StatusCodes } from "http-status-codes";
 import storageService from "./storage.service";
-import { AgentRegister } from "../types/auth.types";
+import { buildRegistryDocName } from "../lib/gcs.lib";
 
 class authService {
-  async registerAgent(payload: AgentRegister, file: Express.Multer.File) {
-    // const isExist = await AgentRepo.isExists(payload.username, email);
-    // if (isExist) {
-    //   throw new AppError(
-    //     StatusCodes.CONFLICT,
-    //     "Username or email already exists",
-    //   );
-    // }
-    // const filepath = `users/${payload.username}-${payload.account_type}-${payload.document_type}-${new Date().toISOString()}.pdf`;
-    // await storageService.uploadFile(file, filepath);
+  async registerAgent(agentRegistry: AgentRegister, file: Express.Multer.File) {
+    const { username, email, accountType, documentType } = agentRegistry;
+    const isExists = await AgentModel.isExists(username, email);
+    if (isExists) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Invalid username or password",
+      );
+    }
+    const filePath = buildRegistryDocName(username, accountType, documentType);
+    await storageService.uploadFile(file, filePath);
+    const newAgent = new AgentModel({
+      ...agentRegistry,
+      documentPath: filePath,
+    });
+    await newAgent.hashPassword();
+    await newAgent.save();
+
     // const agent = new AgentModel(payload, filepath);
     // await agent.hashPassword();
     // console.log(agent.toDocument());
