@@ -1,12 +1,29 @@
-import mongoose, { Model } from "mongoose";
-import { ACCOUNT_TYPES } from "../constants/document-types";
-import { IAgent } from "../types/agent.types";
 import bcrypt from "bcryptjs";
+import mongoose, { Model } from "mongoose";
+import {
+  Account,
+  DocumentTypes,
+  ACCOUNT_TYPES,
+  Status,
+  STATUS,
+} from "../constants/agent.constants";
 
-// interface AgentModelType extends Model<Agent> {
-//   isExists(username: string, email: string): Promise<boolean>;
-// }
-export interface AgentDocument extends IAgent, Document {
+interface IAgent {
+  username: string;
+  password: string;
+  country: mongoose.Schema.Types.ObjectId;
+  contactNo: string;
+  name: string;
+  email: string;
+  address: string;
+  accountType: Account;
+  documentType: DocumentTypes;
+  orgName?: string;
+  documentPath: string;
+  status: Status;
+}
+
+interface AgentDocument extends IAgent, Document {
   _id: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -17,7 +34,7 @@ export interface AgentDocument extends IAgent, Document {
   toJSON(): Record<string, any>;
 }
 
-export interface AgentModel extends Model<AgentDocument> {
+interface AgentModel extends Model<AgentDocument> {
   // Static methods
   isExists(username: string, email: string): Promise<boolean>;
   findByEmail(email: string): Promise<AgentDocument | null>;
@@ -25,10 +42,6 @@ export interface AgentModel extends Model<AgentDocument> {
   // You can also add methods that return Query
   findActive(): mongoose.Query<AgentDocument[], AgentDocument>;
 }
-
-// interface AgentMethods {
-//   hashPassword: () => Promise<any>;
-// }
 
 const agentSchema = new mongoose.Schema<AgentDocument, AgentModel>(
   {
@@ -83,6 +96,12 @@ const agentSchema = new mongoose.Schema<AgentDocument, AgentModel>(
       minLength: 1,
     },
     documentPath: { type: String, required: true },
+    status: {
+      type: String,
+      required: true,
+      enum: STATUS,
+      default: "pending",
+    },
   },
   {
     timestamps: true,

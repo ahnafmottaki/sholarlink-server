@@ -9,6 +9,7 @@ import Country from "../models/country.model";
 
 const getValidated = (schema: _ZodType): RequestHandler => {
   return asyncHandler((req, res, next) => {
+    console.log("getting from getValidated", req.body);
     const result = schema.safeParse(req.body);
     if (!result.success) {
       const error = result.error.issues[0].message;

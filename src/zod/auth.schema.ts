@@ -1,5 +1,5 @@
 import z from "zod";
-import { ACCOUNT_TYPES } from "../constants/document-types";
+import { ACCOUNT_TYPES } from "../constants/agent.constants";
 
 const loginSchema = z.object({
   username: z.string().min(3, "username is required"),

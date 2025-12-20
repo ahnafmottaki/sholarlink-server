@@ -10,9 +10,12 @@ const ACCOUNT_TYPES = {
   },
 } as const;
 
+const STATUS = ["pending", "approved", "rejected"] as const;
+type Status = (typeof STATUS)[number];
+
 type Account = keyof typeof ACCOUNT_TYPES;
 type GetType<T extends Account> = keyof (typeof ACCOUNT_TYPES)[T];
 type DocumentTypes = GetType<"individual"> | GetType<"organization">;
 
-export { type Account, type DocumentTypes };
-export { ACCOUNT_TYPES };
+export { type Account, type DocumentTypes, Status };
+export { ACCOUNT_TYPES, STATUS };
