@@ -31,34 +31,42 @@ class authService {
     // return agent;
   }
 
-  // async loginAgent(username: string, password: string) {
-  //   const agent = await AgentRepo.findAgentByUsername(username);
-  //   if (!agent) return null;
+  async loginAgent(username: string, password: string) {
+    const agent = await AgentModel.findByUsername(username);
+    if (!agent)
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Invalid username or password",
+      );
 
-  //   const isValid = await bcrypt.compare(password, agent.password);
-  //   if (!isValid) return null;
+    const isValid = await bcrypt.compare(password, agent.password);
+    if (!isValid)
+      throw new AppError(
+        StatusCodes.UNAUTHORIZED,
+        "Invalid username or password",
+      );
 
-  //   if (agent.status === "pending") {
-  //     throw new AppError(
-  //       StatusCodes.BAD_REQUEST,
-  //       "Verification pending, please check your email for confirmation",
-  //     );
-  //   }
-  //   if (agent.status === "rejected") {
-  //     throw new AppError(
-  //       StatusCodes.BAD_REQUEST,
-  //       "Rejected application, please check your email for more information",
-  //     );
-  //   }
+    if (agent.status === "pending") {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Verification pending, please check your email for confirmation",
+      );
+    }
+    if (agent.status === "rejected") {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Rejected application, please check your email for more information",
+      );
+    }
 
-  //   const token = this.signPayload({
-  //     _id: agent._id.toString(),
-  //     role: agent.role,
-  //     username: agent.username,
-  //   });
+    const token = this.signPayload({
+      _id: agent._id.toString(),
+      role: agent.role,
+      username: agent.username,
+    });
 
-  //   return { agent, token };
-  // }
+    return { agent, token };
+  }
 
   // async adminLogin(username: string, password: string) {
   //   const admin = await AdminRepo.findByUsername(username);

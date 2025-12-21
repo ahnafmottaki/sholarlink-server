@@ -13,6 +13,7 @@ interface IAgent {
   password: string;
   country: mongoose.Schema.Types.ObjectId;
   contactNo: string;
+  role: "agent";
   name: string;
   email: string;
   address: string;
@@ -38,6 +39,7 @@ interface AgentModel extends Model<AgentDocument> {
   // Static methods
   isExists(username: string, email: string): Promise<boolean>;
   findByEmail(email: string): Promise<AgentDocument | null>;
+  findByUsername(username: string): Promise<AgentDocument | null>;
 
   // You can also add methods that return Query
   findActive(): mongoose.Query<AgentDocument[], AgentDocument>;
@@ -66,6 +68,11 @@ const agentSchema = new mongoose.Schema<AgentDocument, AgentModel>(
       type: String,
       required: true,
       minLength: 1,
+    },
+    role: {
+      type: String,
+      enum: ["agent"],
+      default: "agent",
     },
     name: {
       type: String,
@@ -128,6 +135,10 @@ agentSchema.statics.isExists = async function (username, email) {
 
 agentSchema.statics.findByEmail = async function (email) {
   return this.findOne({ email });
+};
+
+agentSchema.statics.findByUsername = async function (username) {
+  return this.findOne({ username });
 };
 
 // Export model
