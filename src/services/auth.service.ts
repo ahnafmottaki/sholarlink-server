@@ -13,10 +13,7 @@ class authService {
     const { username, email, accountType, documentType } = agentRegistry;
     const isExists = await AgentModel.isExists(username, email);
     if (isExists) {
-      throw new AppError(
-        StatusCodes.BAD_REQUEST,
-        "Invalid username or password",
-      );
+      throw new AppError(StatusCodes.BAD_REQUEST, "Agent already exists");
     }
     const filePath = buildRegistryDocName(username, accountType, documentType);
     await storageService.uploadFile(file, filePath);
