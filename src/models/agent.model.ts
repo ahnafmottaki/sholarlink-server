@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 import {
   Account,
   DocumentTypes,
@@ -24,7 +24,7 @@ interface IAgent {
   status: Status;
 }
 
-interface AgentDocument extends IAgent, Document {
+interface AgentDocument extends IAgent, mongoose.Document {
   _id: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -35,7 +35,7 @@ interface AgentDocument extends IAgent, Document {
   toJSON(): Record<string, any>;
 }
 
-interface AgentModel extends Model<AgentDocument> {
+interface AgentModel extends mongoose.Model<AgentDocument> {
   // Static methods
   isExists(username: string, email: string): Promise<boolean>;
   findByEmail(email: string): Promise<AgentDocument | null>;

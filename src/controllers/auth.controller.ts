@@ -24,3 +24,10 @@ export const login = asyncHandler(async (req, res, next) => {
   setCookie(res, token);
   new ApiResponse(StatusCodes.OK, "Login Successful").sendResponse(res);
 });
+
+export const adminLogin = asyncHandler(async (req, res, next) => {
+  const { username, password } = req.body;
+  const { token } = await authService.adminLogin(username, password);
+  setCookie(res, token);
+  new ApiResponse(StatusCodes.OK, "Login Successful").sendResponse(res);
+});

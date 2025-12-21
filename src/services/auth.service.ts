@@ -7,6 +7,7 @@ import { AppError } from "../lib/AppError";
 import { StatusCodes } from "http-status-codes";
 import storageService from "./storage.service";
 import { buildRegistryDocName } from "../lib/gcs.lib";
+import { AdminModel } from "../models/admin.model";
 
 class authService {
   async registerAgent(agentRegistry: AgentRegister, file: Express.Multer.File) {
@@ -68,22 +69,28 @@ class authService {
     return { agent, token };
   }
 
-  // async adminLogin(username: string, password: string) {
-  //   const admin = await AdminRepo.findByUsername(username);
-  //   if (!admin) {
-  //     throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid Credentials");
-  //   }
-  //   const isValid = await bcrypt.compare(password, admin.password);
-  //   if (!isValid) {
-  //     throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid Credentials");
-  //   }
-  //   const token = this.signPayload({
-  //     _id: admin._id.toString(),
-  //     role: admin.role,
-  //     username: admin.username,
-  //   });
-  //   return { admin, token };
-  // }
+  async adminLogin(username: string, password: string) {
+    const admin = await AdminModel.findByUsername(username);
+    if (!admin) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Invalid username or password",
+      );
+    }
+    const isValid = await bcrypt.compare(password, admin.password);
+    if (!isValid) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Invalid username or password",
+      );
+    }
+    const token = this.signPayload({
+      _id: admin._id.toString(),
+      role: admin.role,
+      username: admin.username,
+    });
+    return { admin, token };
+  }
 
   signPayload(payload: Record<string, unknown>) {
     return jwt.sign(payload, env.JWT_SECRET, {
