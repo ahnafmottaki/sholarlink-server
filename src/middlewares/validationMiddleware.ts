@@ -33,6 +33,7 @@ const validateRegisterInput = [
     return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid country"));
   }),
 ];
+
 const validateLoginInput = getValidated(loginSchema);
 
 export { validateRegisterInput, validateLoginInput };
