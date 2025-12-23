@@ -26,7 +26,6 @@ const validateRegisterInput = [
       return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid country"));
     }
     const country = await Country.findById(countryId);
-    console.log("got country", country);
     if (country) {
       return next();
     }

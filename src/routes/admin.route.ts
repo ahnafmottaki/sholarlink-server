@@ -1,5 +1,9 @@
 import express from "express";
-import { getAdminDashboard, getAgents } from "../controllers/admin.controller";
+import {
+  getAdminDashboard,
+  getAgent,
+  getAgents,
+} from "../controllers/admin.controller";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { verifyRole } from "../middlewares/verifyRole";
 
@@ -10,5 +14,7 @@ router.use(verifyJwt, verifyRole("admin"));
 router.get("/", getAdminDashboard);
 
 router.get("/agents", getAgents);
+
+router.get("/agents/:id", getAgent);
 
 export default router;

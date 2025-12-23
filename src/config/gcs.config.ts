@@ -15,7 +15,6 @@ interface ServiceAccountCredentials {
 }
 
 function generateServiceAccountCredentials(): ServiceAccountCredentials {
-  console.log(env.GOOGLE_PRIVATE_KEY);
   const credentials: ServiceAccountCredentials = {
     type: "service_account",
     project_id: env.GOOGLE_PROJECT_ID,
