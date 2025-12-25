@@ -1,6 +1,11 @@
 import express from "express";
 import upload from "../lib/multer";
-import { adminLogin, login, signup } from "../controllers/auth.controller";
+import {
+  adminLogin,
+  login,
+  logout,
+  signup,
+} from "../controllers/auth.controller";
 import {
   validateLoginInput,
   validateRegisterInput,
@@ -17,5 +22,7 @@ router.post(
 router.post("/login", validateLoginInput, login);
 
 router.post("/adminLogin", validateLoginInput, adminLogin);
+
+router.post("/logout", logout);
 
 export default router;

@@ -17,7 +17,6 @@ class AdminService {
     const documentUrl = await storageService.getSignedUrl(agent.documentPath);
     const { documentPath, ...rest } = agent.toObject();
     const agentWithUrl = { ...rest, documentUrl };
-    console.log("getting hit: agentUrl");
     return agentWithUrl;
   }
 

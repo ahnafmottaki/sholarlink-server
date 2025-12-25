@@ -31,3 +31,8 @@ export const adminLogin = asyncHandler(async (req, res, next) => {
   setCookie(res, token);
   new ApiResponse(StatusCodes.OK, "Login Successful").sendResponse(res);
 });
+
+export const logout = asyncHandler(async (req, res, next) => {
+  await authService.logout(res);
+  new ApiResponse(StatusCodes.OK, "Logout Successful").sendResponse(res);
+});

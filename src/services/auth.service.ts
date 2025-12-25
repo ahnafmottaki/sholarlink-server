@@ -8,6 +8,7 @@ import { StatusCodes } from "http-status-codes";
 import storageService from "./storage.service";
 import { buildRegistryDocName } from "../lib/gcs.lib";
 import { AdminModel } from "../models/admin.model";
+import { Response } from "express";
 
 class authService {
   async registerAgent(agentRegistry: AgentRegister, file: Express.Multer.File) {
@@ -90,6 +91,16 @@ class authService {
       username: admin.username,
     });
     return { admin, token };
+  }
+
+  async logout(res: Response) {
+    // clear the cookie
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      maxAge: 0,
+      sameSite: "lax",
+    });
   }
 
   signPayload(payload: Record<string, unknown>) {
