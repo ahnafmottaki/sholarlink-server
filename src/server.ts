@@ -16,7 +16,7 @@ import cookieParser from "cookie-parser";
   app.use(
     cors({
       origin: env.ORIGIN,
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
       credentials: true,
     }),
   );

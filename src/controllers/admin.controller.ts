@@ -21,3 +21,15 @@ export const getAgent = asyncHandler(async (req, res, next) => {
   const agent = await adminService.getAgent(id);
   new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, agent).sendResponse(res);
 });
+
+export const updateAgentStatus = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+  const status = req.query?.status as string;
+  if (!id || !status) {
+    return next(
+      new AppError(StatusCodes.BAD_REQUEST, "Invalid agent id or status"),
+    );
+  }
+  await adminService.updateAgentStatus(id, status);
+  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK).sendResponse(res);
+});

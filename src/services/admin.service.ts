@@ -20,6 +20,28 @@ class AdminService {
     return agentWithUrl;
   }
 
+  async updateAgentStatus(id: string, status: string) {
+    const agent = await AgentModel.findById(id);
+    if (!agent) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Agent not found");
+    }
+    if (agent.status === status) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Agent status is already updated",
+      );
+    }
+
+    if (status === "approved" && agent.status === "pending") {
+      agent.status = status;
+    } else if (status === "rejected" && agent.status === "pending") {
+      agent.status = status;
+    } else {
+      throw new AppError(StatusCodes.BAD_REQUEST, "Invalid status transition");
+    }
+    await agent.save();
+  }
+
   async getAgents() {
     const agents = await AgentModel.aggregate([
       {

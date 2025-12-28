@@ -3,6 +3,7 @@ import {
   getAdminDashboard,
   getAgent,
   getAgents,
+  updateAgentStatus,
 } from "../controllers/admin.controller";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { verifyRole } from "../middlewares/verifyRole";
@@ -16,5 +17,7 @@ router.get("/", getAdminDashboard);
 router.get("/agents", getAgents);
 
 router.get("/agents/:id", getAgent);
+
+router.patch("/agents/:id", updateAgentStatus);
 
 export default router;
