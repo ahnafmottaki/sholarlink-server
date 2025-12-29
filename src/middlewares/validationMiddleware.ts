@@ -6,6 +6,7 @@ import { AppError } from "../lib/AppError";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import Country from "../models/country.model";
+import { studentProfileSchema } from "../zod/profile.schema";
 
 const getValidated = (schema: _ZodType): RequestHandler => {
   return asyncHandler((req, res, next) => {
@@ -35,4 +36,6 @@ const validateRegisterInput = [
 
 const validateLoginInput = getValidated(loginSchema);
 
-export { validateRegisterInput, validateLoginInput };
+const validateProfileInput = getValidated(studentProfileSchema);
+
+export { validateRegisterInput, validateLoginInput, validateProfileInput };
