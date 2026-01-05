@@ -8,6 +8,19 @@ const upload = multer({
       file.mimetype !== "application/pdf"
     ) {
       cb(new Error("Invalid file type, please upload a PDF file."));
+    } else if (req.originalUrl === "/api/v1/agent/" && req.method === "POST") {
+      if (
+        file.fieldname === "photo" &&
+        file.mimetype !== "image/jpeg" &&
+        file.mimetype !== "image/png"
+      ) {
+        cb(new Error("Invalid file type, please upload a JPEG or PNG image."));
+      } else if (
+        file.fieldname !== "photo" &&
+        file.mimetype !== "application/pdf"
+      ) {
+        cb(new Error("Invalid file type, please upload a PDF file."));
+      }
     } else {
       cb(null, true);
     }

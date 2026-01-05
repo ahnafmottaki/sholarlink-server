@@ -14,7 +14,6 @@ const verifyJwt = asyncHandler((req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET);
-    console.log(decoded);
     (req as any).user = decoded;
     next();
   } catch (err) {

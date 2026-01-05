@@ -2,7 +2,6 @@ import { StatusCodes } from "http-status-codes";
 import { AgentModel } from "../models/agent.model";
 import { AppError } from "../lib/AppError";
 import storageService from "./storage.service";
-import { buildRegistryDocName } from "../lib/gcs.lib";
 
 class AdminService {
   async getAdminDashboard() {}

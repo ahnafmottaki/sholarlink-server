@@ -4,10 +4,31 @@ import { AppError } from "../lib/AppError";
 
 class StorageService {
   private _registryFolder: string = "user-documents";
+  private _studentFolder: string = "student-profiles";
+  get studentFolder() {
+    return this._studentFolder;
+  }
+
+  getStudentProfileDocumentName(
+    profileId: string,
+    documentName: string,
+    mimetype: string,
+  ) {
+    return `${this.studentFolder}/${profileId}/${documentName}-${new Date().toISOString()}.${mimetype.split("/")[1]}`;
+  }
+
+  buildRegistryDocName(
+    username: string,
+    accountType: string,
+    documentType: string,
+  ) {
+    return `${this.registryFolder}/${username}-${accountType}-${documentType}-${new Date().toISOString()}.pdf`;
+  }
 
   get registryFolder() {
     return this._registryFolder;
   }
+
   uploadFile(file: Express.Multer.File, fileName: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const bucketFile = bucket.file(fileName);

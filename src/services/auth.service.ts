@@ -6,7 +6,6 @@ import { AgentModel } from "../models/agent.model";
 import { AppError } from "../lib/AppError";
 import { StatusCodes } from "http-status-codes";
 import storageService from "./storage.service";
-import { buildRegistryDocName } from "../lib/gcs.lib";
 import { AdminModel } from "../models/admin.model";
 import { Response } from "express";
 
@@ -17,7 +16,11 @@ class authService {
     if (isExists) {
       throw new AppError(StatusCodes.BAD_REQUEST, "Agent already exists");
     }
-    const filePath = buildRegistryDocName(username, accountType, documentType);
+    const filePath = storageService.buildRegistryDocName(
+      username,
+      accountType,
+      documentType,
+    );
     await storageService.uploadFile(file, filePath);
     const newAgent = new AgentModel({
       ...agentRegistry,

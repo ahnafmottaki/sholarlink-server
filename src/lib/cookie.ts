@@ -2,7 +2,6 @@ import { Response } from "express";
 import { env } from "../config/env";
 
 export function setCookie(res: Response, token: string) {
-  console.log("setting cookie");
   res.cookie("accessToken", token, {
     httpOnly: true,
     secure: env.NODE_ENV === "production",
