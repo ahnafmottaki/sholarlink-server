@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { typedEntries } from "../lib/typedEntries";
 import StudentModel from "../models/student.model";
 import { AgentModel } from "../models/agent.model";
+import { AppError } from "../lib/AppError";
 
 interface Documents {
   passport: Express.Multer.File;
@@ -57,6 +58,29 @@ class AgentService {
     }));
     console.log(studentsWithAgentName);
     return studentsWithAgentName;
+  }
+
+  async getStudent(agentId: string, studentId: string) {
+    const student = await StudentModel.findOne(
+      {
+        _id: studentId,
+        ownedBy: agentId,
+      },
+      "-ownedBy",
+    );
+
+    if (!student) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Student not found");
+    }
+
+    [student.passport, student.transcripts, student.photo] =
+      await storageService.getMultipleSignedUrls(
+        student.passport,
+        student.transcripts,
+        student.photo,
+      );
+
+    return student.toJSON();
   }
 }
 

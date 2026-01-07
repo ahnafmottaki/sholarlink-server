@@ -66,6 +66,22 @@ class StorageService {
       );
     }
   }
+
+  async getMultipleSignedUrls(...fileNames: string[]): Promise<string[]> {
+    const filesUrls = await Promise.allSettled(
+      fileNames.map((fileName) => this.getSignedUrl(fileName)),
+    );
+    const urls = filesUrls.map((result) => {
+      if (result.status === "rejected") {
+        throw new AppError(
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          ReasonPhrases.INTERNAL_SERVER_ERROR,
+        );
+      }
+      return result.value;
+    });
+    return urls;
+  }
 }
 
 export default new StorageService();

@@ -2,6 +2,7 @@ import express from "express";
 import {
   createProfile,
   getDashboard,
+  getStudent,
   getStudents,
 } from "../controllers/agent.controller";
 import { verifyJwt } from "../middlewares/verifyJwt";
@@ -24,5 +25,7 @@ const uploadMiddleware = upload.fields([
 router.post("/", uploadMiddleware, validateProfileInput, createProfile);
 
 router.get("/students", getStudents);
+
+router.get("/students/:_id", getStudent);
 
 export default router;

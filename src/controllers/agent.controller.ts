@@ -39,3 +39,10 @@ export const getStudents = withAuth(async (req, res, next) => {
 
   new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, students).sendResponse(res);
 });
+
+export const getStudent = withAuth(async (req, res, next) => {
+  const agentId = req.user._id;
+  const studentId = req.params._id;
+  const student = await agentService.getStudent(agentId, studentId);
+  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, student).sendResponse(res);
+});
