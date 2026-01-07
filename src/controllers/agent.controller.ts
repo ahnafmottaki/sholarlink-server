@@ -32,3 +32,10 @@ export const createProfile = withAuth(async (req, res, next) => {
     "profile created successfully",
   ).sendResponse(res);
 });
+
+export const getStudents = withAuth(async (req, res, next) => {
+  const agentId = req.user._id;
+  const students = await agentService.getStudents(agentId);
+
+  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, students).sendResponse(res);
+});

@@ -33,3 +33,8 @@ export const updateAgentStatus = asyncHandler(async (req, res, next) => {
   await adminService.updateAgentStatus(id, status);
   new ApiResponse(StatusCodes.OK, ReasonPhrases.OK).sendResponse(res);
 });
+
+export const getStudents = asyncHandler(async (req, res, next) => {
+  const students = await adminService.getStudents();
+  new ApiResponse(StatusCodes.OK, ReasonPhrases.OK, students).sendResponse(res);
+});

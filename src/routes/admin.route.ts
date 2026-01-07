@@ -3,6 +3,7 @@ import {
   getAdminDashboard,
   getAgent,
   getAgents,
+  getStudents,
   updateAgentStatus,
 } from "../controllers/admin.controller";
 import { verifyJwt } from "../middlewares/verifyJwt";
@@ -13,6 +14,8 @@ const router = express.Router();
 router.use(verifyJwt, verifyRole("admin"));
 
 router.get("/", getAdminDashboard);
+
+router.get("/students", getStudents);
 
 router.get("/agents", getAgents);
 

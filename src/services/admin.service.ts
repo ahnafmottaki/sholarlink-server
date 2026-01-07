@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { AgentModel } from "../models/agent.model";
 import { AppError } from "../lib/AppError";
 import storageService from "./storage.service";
+import StudentModel from "../models/student.model";
 
 class AdminService {
   async getAdminDashboard() {}
@@ -77,6 +78,17 @@ class AdminService {
       },
     ]);
     return agents;
+  }
+
+  async getStudents() {
+    const students = await StudentModel.find(
+      {},
+      "_id firstName lastName university satScore major gpa contactNo ownedBy createdAt updatedAt",
+    )
+      .limit(10)
+      .populate("ownedBy", "name _id")
+      .exec();
+    return students;
   }
 }
 

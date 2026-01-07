@@ -14,18 +14,21 @@ import cookieParser from "cookie-parser";
 (async () => {
   await mongoConnect();
   const app = express();
+
+  app.use(cookieParser());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  console.log(env.ORIGIN);
   app.use(
     cors({
-      origin: env.ORIGIN,
+      origin: [env.ORIGIN],
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
       credentials: true,
     }),
   );
 
   app.use(morgan("dev"));
-  app.use(cookieParser());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
 
   app.use("/api/v1/country", countryRouter);
   app.use("/api/v1/auth", authRouter);

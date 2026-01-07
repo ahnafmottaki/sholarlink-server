@@ -5,6 +5,7 @@ import storageService from "./storage.service";
 import mongoose from "mongoose";
 import { typedEntries } from "../lib/typedEntries";
 import StudentModel from "../models/student.model";
+import { AgentModel } from "../models/agent.model";
 
 interface Documents {
   passport: Express.Multer.File;
@@ -42,6 +43,20 @@ class AgentService {
       ownedBy: agentId,
     });
     await student.save();
+  }
+
+  async getStudents(agentId: string) {
+    const students = await StudentModel.find(
+      { ownedBy: agentId },
+      "_id firstName lastName university major satScore gpa contactNo createdAt updatedAt",
+    );
+    const ownedBy = await AgentModel.findById(agentId);
+    const studentsWithAgentName = students.map((student) => ({
+      ...student.toObject(),
+      ownedBy: ownedBy!.name,
+    }));
+    console.log(studentsWithAgentName);
+    return studentsWithAgentName;
   }
 }
 

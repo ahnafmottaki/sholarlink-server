@@ -1,5 +1,9 @@
 import express from "express";
-import { createProfile, getDashboard } from "../controllers/agent.controller";
+import {
+  createProfile,
+  getDashboard,
+  getStudents,
+} from "../controllers/agent.controller";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { verifyRole } from "../middlewares/verifyRole";
 import { validateProfileInput } from "../middlewares/validationMiddleware";
@@ -18,5 +22,7 @@ const uploadMiddleware = upload.fields([
 ]);
 
 router.post("/", uploadMiddleware, validateProfileInput, createProfile);
+
+router.get("/students", getStudents);
 
 export default router;
