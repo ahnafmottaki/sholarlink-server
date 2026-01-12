@@ -7,6 +7,7 @@ import { typedEntries } from "../lib/typedEntries";
 import StudentModel from "../models/student.model";
 import { AgentModel } from "../models/agent.model";
 import { AppError } from "../lib/AppError";
+import { StepModel } from "../models/step.model";
 
 interface Documents {
   passport: Express.Multer.File;
@@ -23,7 +24,7 @@ class AgentService {
   async createStudentProfile(
     agentId: string,
     studentInput: StudentInput,
-    documents: Documents,
+    documents: Documents
   ) {
     const profileId = new mongoose.Types.ObjectId();
     let documentsMapped = {} as Record<keyof Documents, string>;
@@ -31,17 +32,32 @@ class AgentService {
       const fileName = storageService.getStudentProfileDocumentName(
         profileId.toString(),
         key,
-        file.mimetype,
+        file.mimetype
       );
       await storageService.uploadFile(file, fileName);
       documentsMapped[key] = fileName;
     }
+
+    const step = await StepModel.findOne({
+      order: 1,
+    });
+
+    if (!step)
+      throw new AppError(StatusCodes.BAD_REQUEST, "Step must be created first");
 
     const student = new StudentModel({
       _id: profileId,
       ...studentInput,
       ...documentsMapped,
       ownedBy: agentId,
+      steps: [
+        {
+          _id: step._id,
+          order: step.order,
+          showToAgent: step.showToAgent,
+          completed: step.completed,
+        },
+      ],
     });
     await student.save();
   }
@@ -49,7 +65,7 @@ class AgentService {
   async getStudents(agentId: string) {
     const students = await StudentModel.find(
       { ownedBy: agentId },
-      "_id firstName lastName university major satScore gpa contactNo createdAt updatedAt",
+      "_id firstName lastName university major satScore gpa contactNo createdAt updatedAt"
     );
     return students.map((student) => student.toJSON());
   }
@@ -60,7 +76,7 @@ class AgentService {
         _id: studentId,
         ownedBy: agentId,
       },
-      "-ownedBy",
+      "-ownedBy"
     );
 
     if (!student) {
@@ -71,7 +87,7 @@ class AgentService {
       await storageService.getMultipleSignedUrls(
         student.passport,
         student.transcripts,
-        student.photo,
+        student.photo
       );
 
     return student.toJSON();

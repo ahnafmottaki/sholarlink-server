@@ -43,5 +43,5 @@ stepSchema.statics.createStep = async function () {
   const result = await this.insertOne(textStep);
   console.log(result);
 };
-
 export const StepModel = mongoose.model<Step, Step_Model>("Step", stepSchema);
+export type { IStep };
