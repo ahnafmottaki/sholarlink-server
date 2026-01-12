@@ -8,6 +8,7 @@ import {
 } from "../controllers/admin.controller";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { verifyRole } from "../middlewares/verifyRole";
+import { getStudent } from "../controllers/admin.controller";
 
 const router = express.Router();
 
@@ -16,6 +17,8 @@ router.use(verifyJwt, verifyRole("admin"));
 router.get("/", getAdminDashboard);
 
 router.get("/students", getStudents);
+
+router.get("/students/:_id", getStudent);
 
 router.get("/agents", getAgents);
 

@@ -14,7 +14,6 @@ import cookieParser from "cookie-parser";
 (async () => {
   await mongoConnect();
   const app = express();
-
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

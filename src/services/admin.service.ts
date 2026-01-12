@@ -28,7 +28,7 @@ class AdminService {
     if (agent.status === status) {
       throw new AppError(
         StatusCodes.BAD_REQUEST,
-        "Agent status is already updated",
+        "Agent status is already updated"
       );
     }
 
@@ -69,7 +69,7 @@ class AdminService {
           statusOrder: 0,
           password: 0,
           role: 0,
-          usename: 0,
+          username: 0,
           contactNo: 0,
           address: 0,
           documentType: 0,
@@ -83,12 +83,26 @@ class AdminService {
   async getStudents() {
     const students = await StudentModel.find(
       {},
-      "_id firstName lastName university satScore major gpa contactNo ownedBy createdAt updatedAt",
+      "_id firstName lastName university satScore major gpa contactNo ownedBy createdAt updatedAt"
     )
       .limit(10)
       .populate("ownedBy", "name _id")
       .exec();
     return students;
+  }
+
+  async getStudent(studentId: string) {
+    const student = await StudentModel.findById(studentId, "-ownedBy");
+    if (!student) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Student not found");
+    }
+    [student.passport, student.transcripts, student.photo] =
+      await storageService.getMultipleSignedUrls(
+        student.passport,
+        student.transcripts,
+        student.photo
+      );
+    return student.toJSON();
   }
 }
 

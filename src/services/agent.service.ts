@@ -51,13 +51,7 @@ class AgentService {
       { ownedBy: agentId },
       "_id firstName lastName university major satScore gpa contactNo createdAt updatedAt",
     );
-    const ownedBy = await AgentModel.findById(agentId);
-    const studentsWithAgentName = students.map((student) => ({
-      ...student.toObject(),
-      ownedBy: ownedBy!.name,
-    }));
-    console.log(studentsWithAgentName);
-    return studentsWithAgentName;
+    return students.map((student) => student.toJSON());
   }
 
   async getStudent(agentId: string, studentId: string) {
