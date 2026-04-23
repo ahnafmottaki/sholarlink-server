@@ -1,38 +1,27 @@
-# Node.js, TypeScript, and Express Starter Template
+# SSC MCQ Exam App
 
-This is a starter template for a Node.js, TypeScript, and Express project.
+This project is now a standalone MCQ exam app for class 9-10 students.
 
-## Prerequisites
+## Features
 
-- Node.js
-- npm
+- Subject-based homepage
+- Chapter exams and whole-book mock exams
+- Difficulty unlock flow: `Easy -> Normal -> Hard`
+- 30 MCQs for each exam
+- 1 minute per question
+- Full-screen `3 2 1` countdown before exam start
+- Question progress ticks
+- Final result screen with performance feedback
+- Progress saved in browser `localStorage`
 
-## Getting Started
+## Run
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   ```
-
-2. Install the dependencies:
+1. Install dependencies:
    ```bash
    npm install
    ```
-
-3. Create a `.env` file in the root directory and add the following:
-   ```
-   PORT=3000
-   ```
-
-4. Start the development server:
+2. Start the app:
    ```bash
    npm run dev
    ```
-
-5. Open your browser and navigate to `http://localhost:3000`.
-
-## Available Scripts
-
-- `npm run dev`: Starts the development server with `nodemon` and `ts-node`.
-- `npm start`: Starts the server from the compiled `dist` directory.
-- `npm run build`: Compiles the TypeScript code to JavaScript.
+3. Open `http://localhost:5000`

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSC MCQ Exam Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+
+      <main class="layout">
+        <section class="hero card">
+          <p class="eyebrow">Class 9-10 Practice Zone</p>
+          <h1>SSC-style MCQ exams with chapter-wise difficulty unlocks.</h1>
+          <p class="hero-copy">
+            Pick a subject, choose a chapter or whole-book mock, and move from
+            <strong>Easy</strong> to <strong>Normal</strong> to
+            <strong>Hard</strong>. Your browser saves all progress locally.
+          </p>
+
+          <div class="hero-stats">
+            <article>
+              <strong>30</strong>
+              <span>MCQs per exam</span>
+            </article>
+            <article>
+              <strong>60s</strong>
+              <span>per question</span>
+            </article>
+            <article>
+              <strong>3</strong>
+              <span>difficulty levels</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <aside class="panel card">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Step 1</p>
+                <h2>Choose Subject</h2>
+              </div>
+              <button id="resetProgressBtn" class="ghost-btn" type="button">
+                Reset local progress
+              </button>
+            </div>
+            <div id="subjectList" class="subject-grid"></div>
+          </aside>
+
+          <section class="main-column">
+            <div class="panel card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Step 2</p>
+                  <h2>Chapter Or Whole Book</h2>
+                </div>
+                <div id="selectionBadge" class="badge hidden"></div>
+              </div>
+              <div id="scopeList" class="scope-grid empty-state">
+                Select a subject to view chapters and the whole-book mock exam.
+              </div>
+            </div>
+
+            <div class="panel card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Step 3</p>
+                  <h2>Difficulty Unlock</h2>
+                </div>
+              </div>
+              <div id="difficultyList" class="difficulty-grid empty-state">
+                Choose a chapter or whole-book exam first.
+              </div>
+            </div>
+
+            <div class="panel card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Progress</p>
+                  <h2>Saved On This Device</h2>
+                </div>
+              </div>
+              <div id="progressSummary" class="progress-summary empty-state">
+                Your completed exams, unlocked difficulties, and best scores
+                will appear here.
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <section id="countdownOverlay" class="countdown-overlay hidden">
+      <p>Exam is starting</p>
+      <strong id="countdownValue">3</strong>
+    </section>
+
+    <section id="examOverlay" class="exam-overlay hidden">
+      <div class="exam-shell card">
+        <div class="exam-topbar">
+          <div>
+            <p id="examMeta" class="eyebrow">Exam Session</p>
+            <h2 id="examTitle">MCQ Challenge</h2>
+          </div>
+          <button id="exitExamBtn" class="ghost-btn" type="button">
+            End exam
+          </button>
+        </div>
+
+        <div class="timer-strip">
+          <div class="timer-copy">
+            <span>Time left for this question</span>
+            <strong id="timerLabel">60s</strong>
+          </div>
+          <div class="timer-track">
+            <div id="timerBar" class="timer-bar"></div>
+          </div>
+        </div>
+
+        <div class="question-progress-wrap">
+          <div id="questionProgress" class="question-progress"></div>
+        </div>
+
+        <article class="question-card">
+          <p id="questionNumber" class="question-number">Question 1 of 30</p>
+          <h3 id="questionText" class="question-text"></h3>
+          <div id="optionList" class="option-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="resultOverlay" class="result-overlay hidden">
+      <div class="result-card card">
+        <div id="resultBurst" class="result-burst"></div>
+        <p class="eyebrow">Exam Result</p>
+        <h2 id="resultHeading">You did it!</h2>
+        <p id="resultScore" class="result-score">0 / 30</p>
+        <p id="resultMessage" class="result-message"></p>
+        <div id="resultBreakdown" class="result-breakdown"></div>
+        <button id="closeResultBtn" class="primary-btn" type="button">
+          Back to dashboard
+        </button>
+      </div>
+    </section>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
